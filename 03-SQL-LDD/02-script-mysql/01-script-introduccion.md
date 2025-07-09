@@ -1,4 +1,5 @@
---Lenguaje SQL-LDD( create,alter,drop)
+```sql
+-Lenguaje SQL-LDD( create,alter,drop)
 
 --Crear la base de datos empresag2
 CREATE DATABASE empresag2;
@@ -134,5 +135,4 @@ proyectid int not null identity(1,1),
 NameProyect varchar(20) not null,
 CONSTRAINT pk_proyect
 PRIMARY KEY(
-
-
+```
