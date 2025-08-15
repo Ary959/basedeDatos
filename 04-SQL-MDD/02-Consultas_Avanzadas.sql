@@ -262,6 +262,7 @@ FROM Representantes AS r
 INNER JOIN Oficinas AS o
 ON r.Num_Empl=o.Jef
 Group by o.Ciudad
+ORDER BY o.Ciudad;
 
 
 
@@ -271,3 +272,72 @@ USE BDEJEMPLO2
 SELECT 
 * FROM Pedidos
 
+USE NORTHWND;
+
+USE NORTHWND
+/*
+Seleccionar el ingreo total por cliente en 1997 y 
+ordenado por el ingreso de forma descendente
+*/
+SELECT  c.CompanyName AS [Cliente ],
+SUM(od.Quantity*od.UnitPrice * (1-od.Discount)) AS [Ingreso Total]
+FROM [Order Details] AS od
+INNER JOIN 
+Orders AS o
+ON o.OrderID = od.OrderID
+INNER JOIN Customers AS c
+ON c.CustomerID = o.CustomerID
+WHERE YEAR (o.OrderDate) = 1997
+GROUP BY c.CompanyName 
+ORDER BY c.CompanyName DESC 
+GO
+-------------------------------------------------------------------------
+SELECT TOP 10 c.CompanyName AS [Cliente ],
+ROUND(SUM(od.Quantity*od.UnitPrice * (1-od.Discount)),2) AS [Ingreso Total]
+FROM [Order Details] AS od
+INNER JOIN 
+Orders AS o
+ON o.OrderID = od.OrderID
+INNER JOIN Customers AS c
+ON c.CustomerID = o.CustomerID
+WHERE YEAR (o.OrderDate) = 1997
+GROUP BY c.CompanyName 
+ORDER BY 2 DESC 
+
+/*
+Seleccionar los productos por categorias mas vendidos, 
+para alemania ordenados por categoria y dentro de categoria por unidad
+de forma descendente
+*/
+SELECT c.CategoryName AS [Categoria],
+p.ProductName AS [Producto],
+
+SUM (od.Quantity) AS [Unidades]
+FROM [Order Details] AS od
+INNER JOIN Orders AS o
+ON o.OrderID=od.OrderID
+INNER JOIN
+Products AS [p]
+ON p.ProductID= od.ProductID
+INNER JOIN 
+Categories AS c
+ON c.CategoryID=p.CategoryID
+WHERE o.ShipCountry='Germany'
+GROUP BY c.CategoryName, P.ProductName
+ORDER BY C.CategoryName
+
+/*
+Seleccionar empleados con mas pedido por año 
+ordenados por año y por numero de pedidos
+*/
+
+
+
+SELECT CONCAT (e.FirstName, '  ', e.LastName) AS [Empleado] ,
+DATEPART(YEAR, o.OrderDate) AS [Año]
+,COUNT (*) AS [Numero Pedido]
+FROM Orders AS o
+INNER JOIN Employees AS e 
+ON o.EmployeeID=e.EmployeeID
+GROUP BY CONCAT (e.FirstName, '  ', e.LastName), DATEPART(YEAR, o.OrderDate)
+ORDER BY [Año], [Numero Pedido] DESC;
